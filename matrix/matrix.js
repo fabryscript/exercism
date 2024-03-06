@@ -4,15 +4,28 @@
 //
 
 export class Matrix {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  constructor(input) {
+    if (typeof input !== "string") return; // remove this
+    this.matrix = input
+      .split("\n")
+      .map((row) => row.split(" ").map((stringValue) => Number(stringValue)));
   }
 
   get rows() {
-    throw new Error('Remove this statement and implement this function');
+    return this.matrix;
   }
 
   get columns() {
-    throw new Error('Remove this statement and implement this function');
+    const transposedMatrix = [];
+
+    for (let colIndex = 0; colIndex < this.matrix[0].length; colIndex++) {
+      const col = [];
+      for (let rowIndex = 0; rowIndex < this.matrix.length; rowIndex++) {
+        col.push(this.matrix[rowIndex][colIndex]);
+      }
+      transposedMatrix.push(col);
+    }
+
+    return transposedMatrix;
   }
 }
