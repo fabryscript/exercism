@@ -1,60 +1,51 @@
 const UNKNOWN_OPERATION = "Unknown operation";
 const SYNTAX_ERROR = "Syntax error";
 
-export const answer = (problems) => {
-  if (typeof problems !== "string") return;
+class UnknownOperation extends Error {
+  constructor() {
+    super(UNKNOWN_OPERATION);
+  }
+}
 
-  const problem = problems
-    .replace("?", "")
-    .replace("What is ", "")
-    .replaceAll("plus", "+")
-    .replaceAll("minus", "-")
-    .replaceAll("multiplied by", "*")
-    .replaceAll("divided by", "/")
+class SyntaxError extends Error {
+  constructor() {
+    super(SYNTAX_ERROR);
+  }
+}
+
+const operations = {
+  plus: (x, y) => Number(x) + Number(y),
+  minus: (x, y) => Number(x) - Number(y),
+  multiplied: (x, y) => Number(x) * Number(y),
+  divided: (x, y) => Number(x) / Number(y),
+};
+
+export const answer = (problem) => {
+  if (typeof problem !== "string") return;
+
+  let problems = problem
+    .replace(/\?|What is|by\s/g, "")
+    .trim()
     .split(" ");
 
-  const expressionNumbers = problem.filter((p) => Number(p));
+  let finalAnswer = Number(problems[0]) || NaN;
 
-  if (problems === "What is?") {
-    throw new Error(SYNTAX_ERROR);
-  } else if (problem.length === 1) {
-    return Number(problem[0]);
-  } else if (!expressionNumbers.length || problem.includes("cubed")) {
-    // problem.includes("cubed") <- test pass
-    throw new Error(UNKNOWN_OPERATION);
-  } else if (
-    problem.length - expressionNumbers.length !==
-    expressionNumbers.length - 1
-  ) {
-    throw new Error(SYNTAX_ERROR);
+  for (let i = 1; i < problems.length; i += 2) {
+    if (!Number.isInteger(Number(problems[i]))) {
+      // ˆ could be solved by using typescript 🤦🏻‍♂️
+      if (!(problems[i] in operations)) throw new UnknownOperation();
+
+      finalAnswer = operations[problems[i]](problems[i - 1], problems[i + 1]);
+
+      problems[i + 1] = finalAnswer;
+    } else if (
+      Number.isInteger(Number(problems[i - 1])) &&
+      Number.isInteger(Number(problems[i]))
+    )
+      throw new SyntaxError();
   }
 
-  let expression = Number(problem[0]);
+  if (!Number.isInteger(finalAnswer)) throw new SyntaxError();
 
-  problem.forEach((_, index) => {
-    const num = Number(problem[index + 1]);
-
-    if (Number(problem[index]) && Number(problem[index - 1])) {
-      throw new Error(SYNTAX_ERROR);
-    }
-
-    switch (problem[index]) {
-      case "+":
-        expression += num;
-        break;
-      case "-":
-        expression -= num;
-        break;
-      case "*":
-        expression *= num;
-        break;
-      case "/":
-        expression /= num;
-        break;
-      default:
-        break;
-    }
-  });
-
-  return expression;
+  return finalAnswer;
 };
