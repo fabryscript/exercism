@@ -7,31 +7,56 @@ export class Clock {
   private hours: number = 0;
   private minutes: number = 0;
 
-  constructor(hours: number, minutes: number) {
-    this.hours = this.getHours(hours);
-    this.minutes = this.getMinutes(minutes);
-  }
+  constructor(hours: number = 0, minutes: number = 0) {
+    this.hours = ((hours % 24) + 24) % 24;
+    this.minutes = ((minutes % 60) + 60) % 60;
 
-  private getHours(hours: number) {
-    return hours % 24;
-  }
-
-  private getMinutes(minutes: number) {
-    return minutes % 60; // ??
+    this.hours += Math.floor(minutes / 60); // Add excess minutes to hours
+    this.hours %= 24; // Ensure hours stay within range after adjustment
   }
 
   toString() {
-    let result = {};
-    if (this.hours < 0) result = { ...result, hours: 24 + -this.hours };
+    const hours = (this.hours < 0 ? 24 + this.hours : this.hours).toString();
+    const minutes = (
+      this.minutes < 0 ? 60 + this.minutes : this.minutes
+    ).toString();
+
+    return `${this.addZero(hours)}:${this.addZero(minutes)}`;
   }
 
-  plus() {}
+  private addZero(input: string) {
+    return input.length === 1 ? "0" + input : input;
+  }
 
-  minus() {}
+  plus(minutes: number) {
+    const duration = this.minutesToDuration(minutes);
+    this.hours += duration.hours;
+    this.minutes += duration.minutes;
+    return new Clock(this.hours, this.minutes);
+  }
+
+  minus(minutes: number) {
+    const duration = this.minutesToDuration(minutes);
+    this.hours -= duration.hours;
+    this.minutes -= duration.minutes;
+    return new Clock(this.hours, this.minutes);
+  }
+
+  private minutesToDuration(inputMinutes: number) {
+    const MINUTES_PER_HOUR = 60;
+    const minutes = inputMinutes % MINUTES_PER_HOUR;
+
+    if (minutes === 0) {
+      return { hours: inputMinutes / MINUTES_PER_HOUR, minutes: 0 };
+    }
+
+    const hours = (inputMinutes - minutes) / MINUTES_PER_HOUR;
+    return { hours, minutes };
+  }
 
   equals(clock: Clock) {
-    return clock.hours === this.hours && clock.minutes === this.minutes;
+    return this.toString() === clock.toString();
   }
 }
 
-console.log(160 % 60);
+console.log(new Clock(4, 10).equals(new Clock(5, -1490)));
