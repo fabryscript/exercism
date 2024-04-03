@@ -3,7 +3,7 @@
 // convenience to get you started writing code faster.
 //
 
-export const spiralMatrix = (n) => {
+export const spiralMatrix = (n: number) => {
   let matrix = new Array(n).fill(null).map(() => new Array(n).fill(0));
 
   let top = 0,
