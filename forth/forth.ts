@@ -17,7 +17,7 @@ class Matrix<T> {
   getIndexByItem(item: T, col: number = 0) {
     let columnIndex = -1;
 
-    for (let i = 0; i < this._matrix.length; i++) {
+    for (let i = this._matrix.length - 1; i >= 0; i--) {
       if (this._matrix[i][col] === item) {
         columnIndex = i;
         break;
@@ -27,8 +27,15 @@ class Matrix<T> {
     return columnIndex;
   }
 
-  getValueFromKey(key: T) {
-    return this._matrix[this.getIndexByItem(key, 0)][1];
+  getValue(key: T): T | undefined {
+    const row = this._matrix[this.getIndexByItem(key, 0)];
+    if (row) return row[1];
+  }
+
+  getKey(value: T): T | undefined {
+    const row = this._matrix[this.getIndexByItem(value, 0)];
+
+    if (row) return row[0];
   }
 
   get() {
@@ -102,8 +109,6 @@ export class Forth {
     this._stack = [];
   }
 
-  getIndexByKey() {}
-
   /**
    * Gets an item of an array based by an index which could also be negative
    * @param input The input string or array
@@ -125,15 +130,17 @@ export class Forth {
       const split = trimCommand.split(" ");
 
       const name = split[0];
-      if (Number.isInteger(+name)) throw new Error("Invalid definition");
+      if (!Number.isNaN(+name)) throw new Error("Invalid definition");
       split.shift();
 
       const replacedCommand = split.map((keyword) => {
-        const index = this.aliases.getIndexByItem(keyword);
+        if (!Number.isNaN(+keyword)) return keyword;
+
         // We are searching if there is a column with the keyword value
-        if (this.aliases.get()[index][0]) {
-          return this.aliases.getValueFromKey(keyword);
+        if (this.aliases.getKey(keyword)) {
+          return this.aliases.getValue(keyword);
         }
+
         return keyword;
       });
 
@@ -147,12 +154,14 @@ export class Forth {
       .split(" ")
       .map((keyword) => {
         if (Number.isInteger(+keyword)) return keyword;
-        // continue from here
-        if (this.aliases.get()) {
-          return this.aliases[1][keyword] as string;
+
+        const correspondingCommand = this.aliases.getValue(keyword);
+
+        if (!correspondingCommand) {
+          throw new Error("Unknown command");
         }
 
-        throw new Error("Unknown command");
+        return correspondingCommand;
       })
       .join(" ")
       .split(" ");
@@ -168,7 +177,6 @@ export class Forth {
       /**
        * This means that the word is an operation
        */
-      console.log(_word);
       const op = _word as keyof typeof this.ops;
       switch (op) {
         case "+":
@@ -207,8 +215,8 @@ export class Forth {
   }
 }
 
-const inst = new Forth();
-inst.evaluate(": foo * ;");
-inst.evaluate("10 2 foo");
+const forth = new Forth();
+forth.evaluate(": SWAP DUP Dup dup ;");
+forth.evaluate("1 swap");
 
-console.log(inst.stack);
+console.log(forth.stack);
