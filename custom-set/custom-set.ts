@@ -25,9 +25,11 @@ export class CustomSet {
   }
 
   add(item: number) {
-    if (this.contains(item)) return;
+    if (this.contains(item)) return new CustomSet(this.#arr);
 
     this.#arr.push(item);
+
+    return new CustomSet(this.#arr);
   }
 
   subset(searchSet: CustomSet) {
@@ -58,13 +60,67 @@ export class CustomSet {
     return true;
   }
 
-  eql() {}
+  eql(compareSet: CustomSet) {
+    if (this.empty() && compareSet.empty()) return true;
+    if (this.empty()) return false;
+    if (compareSet.empty()) return false;
 
-  union() {}
+    const compareSorted = compareSet.sorted().toString();
+    const thisSorted = this.sorted().toString();
 
-  intersection() {}
+    return thisSorted === compareSorted;
+  }
 
-  difference() {}
+  union(compareSet: CustomSet) {
+    const result = new CustomSet(this.#arr);
+
+    compareSet.#arr.forEach((element) => result.add(element));
+
+    return result;
+  }
+
+  intersection(compareSet: CustomSet) {
+    if (this.empty() && compareSet.empty()) return new CustomSet();
+    if (this.empty() || compareSet.empty()) return new CustomSet([]);
+
+    const common = new CustomSet();
+
+    compareSet.#arr.forEach((element) => {
+      if (this.contains(element)) {
+        common.add(element);
+      }
+    });
+
+    return new CustomSet(common.sorted());
+  }
+
+  difference(compareSet: CustomSet) {
+    if (this.empty() && compareSet.empty()) return new CustomSet();
+    if (this.empty()) return new CustomSet();
+    if (compareSet.empty()) return new CustomSet(this.#arr);
+
+    const result = new CustomSet(this.#arr);
+
+    compareSet.#arr.forEach((el) => {
+      if (result.contains(el)) {
+        result.remove(el);
+      }
+    });
+
+    return result;
+  }
+
+  remove(item: number) {
+    const index = this.#arr.indexOf(item);
+    if (index !== -1) {
+      this.#arr.splice(index, 1);
+    }
+  }
+
+  sorted() {
+    return this.#arr.sort((a, b) => (b > a ? -1 : 1));
+  }
 }
 
-console.log(new CustomSet([1]).disjoint(new CustomSet([])));
+const actual = new CustomSet([1, 2, 3]).add(3);
+const expected = new CustomSet([1, 2, 3]);
