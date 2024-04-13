@@ -1,8 +1,28 @@
-//
-// This is only a SKELETON file for the 'Word Count' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
+const countWords = (text) => {
+  const wordMap = {};
 
-export const countWords = () => {
-  throw new Error("Remove this statement and implement this function");
+  const replaced = text
+    .toLowerCase()
+    .replaceAll(/[!"#$%&()*+,\-./:;<=>?@[\]\\^_`{|}~\n\t]/g, " ")
+    .trim();
+
+  const split = replaced.split(" ");
+
+  split.forEach((word) => {
+    let splitWord = word.split("");
+    if (splitWord[splitWord.length - 1] === "'" && splitWord[0] === "'") {
+      splitWord.shift();
+      splitWord.pop();
+    }
+
+    const joined = splitWord.join("");
+
+    if (!wordMap[joined]) {
+      return (wordMap[joined] = 1);
+    } else {
+      return wordMap[joined]++;
+    }
+  });
+
+  return wordMap;
 };
