@@ -41,10 +41,12 @@ export class ResistorColorTrio {
   get label() {
     const firstValue = this.getValue(this.values[0]);
     const secondValue = this.getValue(this.values[1]);
-    const exp = this.getValue(this.values[2]);
+    const exp = 10 ** this.getValue(this.values[2]);
 
-    const total = +`${firstValue}${secondValue}` * +"1".padEnd(exp + 1, "0");
+    const total = +`${firstValue}${secondValue}` * exp;
 
     return `Resistor value: ${this.getScaledTotal(total)}ohms`;
   }
 }
+
+console.log(new ResistorColorTrio(["yellow", "violet", "yellow"]).label);
