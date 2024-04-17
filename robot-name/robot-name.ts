@@ -3,20 +3,21 @@
 
 const ALPHABET = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 
-const _randomNumber = (range = ALPHABET.length) => {
+const _randomNumber = (range: number = ALPHABET.length) => {
   return Math.floor(Math.random() * range);
 };
 
 export class Robot {
+  static releaseNames: () => void;
   static pool = new Map();
 
-  #name;
+  #name: string;
 
   constructor() {
     this.#name = this._generateName();
   }
 
-  _generateName() {
+  private _generateName() {
     const firstLetter = ALPHABET[_randomNumber()];
     const secondLetter = ALPHABET[_randomNumber()];
 
@@ -28,7 +29,7 @@ export class Robot {
   }
 
   _newName() {
-    let name;
+    let name: string;
 
     do {
       name = this._generateName();
