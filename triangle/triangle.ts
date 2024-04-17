@@ -4,10 +4,10 @@
 //
 
 export class Triangle {
-  isTriangle = false;
-  sides = [];
+  isTriangle: boolean = false;
+  sides: number[] = [];
 
-  constructor(...sides) {
+  constructor(...sides: number[]) {
     if (sides.includes(0)) {
       return;
     }
@@ -53,3 +53,5 @@ export class Triangle {
     return this._isScalene();
   }
 }
+
+console.log(new Triangle(1, 1, 3).isIsosceles);
