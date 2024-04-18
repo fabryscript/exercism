@@ -3,16 +3,33 @@
 // convenience to get you started writing code faster.
 //
 
+const ALLERGIES_LIST = {
+  eggs: 1,
+  peanuts: 2,
+  shellfish: 4,
+  strawberries: 8,
+  tomatoes: 16,
+  chocolate: 32,
+  pollen: 64,
+  cats: 128,
+};
+
 export class Allergies {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  confirmedAllergies = [];
+
+  constructor(score) {
+    Object.entries(ALLERGIES_LIST).forEach(([allergen, value]) => {
+      if (score & value) {
+        this.confirmedAllergies.push(allergen);
+      }
+    });
   }
 
   list() {
-    throw new Error('Remove this statement and implement this function');
+    return this.confirmedAllergies;
   }
 
-  allergicTo() {
-    throw new Error('Remove this statement and implement this function');
+  allergicTo(allergen) {
+    return this.confirmedAllergies.includes(allergen);
   }
 }
