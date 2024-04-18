@@ -1,8 +1,3 @@
-//
-// This is only a SKELETON file for the 'Allergies' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-
 const ALLERGIES_LIST = {
   eggs: 1,
   peanuts: 2,
@@ -19,7 +14,7 @@ export class Allergies {
 
   constructor(score: number) {
     Object.entries(ALLERGIES_LIST).forEach(([allergen, value]) => {
-      if (score & value) {
+      if (score % (value * 2) >= value) {
         this.confirmedAllergies.push(allergen);
       }
     });
