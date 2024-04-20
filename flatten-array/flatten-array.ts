@@ -3,10 +3,10 @@
 // convenience to get you started writing code faster.
 //
 
-export const flatten = (input) => {
-  const result = [];
+export const flatten = (input: any[]) => {
+  const result: any[] = [];
 
-  const handleFlattening = (arr) => {
+  const handleFlattening = (arr: unknown[]) => {
     let counter = 0;
 
     while (counter < arr.length) {
