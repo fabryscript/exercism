@@ -3,25 +3,13 @@
 // convenience to get you started writing code faster.
 //
 
-export const flatten = (input: any[]) => {
-  const result: any[] = [];
+const isNil = (v: any) => v == null;
 
-  const handleFlattening = (arr: unknown[]) => {
-    let counter = 0;
-
-    while (counter < arr.length) {
-      const value = arr[counter];
-
-      if (Array.isArray(value)) {
-        handleFlattening(value);
-      } else if (value === 0 || value) {
-        result.push(value);
-      }
-
-      counter++;
-    }
-  };
-
-  handleFlattening(input);
-  return result;
-};
+export const flatten = (input: any[]) =>
+  input.reduce(
+    (total, value) => [
+      ...total,
+      ...(Array.isArray(value) ? flatten(value) : isNil(value) ? [] : [value]),
+    ],
+    []
+  );
