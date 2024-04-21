@@ -3,7 +3,7 @@
 // convenience to get you started writing code faster.
 //
 
-export const clean = (phone) => {
+export const clean = (phone: string) => {
   if (/[a-zA-Z]/g.test(phone)) {
     throw new Error("Letters not permitted");
   }
@@ -71,3 +71,5 @@ export const clean = (phone) => {
 
   return joinedDigits;
 };
+
+console.log(clean("1 (223) 156-7890"));
