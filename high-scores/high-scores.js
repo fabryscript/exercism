@@ -4,23 +4,24 @@
 //
 
 export class HighScores {
-  constructor() {
-    throw new Error("Remove this statement and implement this function");
+  #scores = [];
+  constructor(init = []) {
+    this.#scores = init;
   }
 
   get scores() {
-    throw new Error("Remove this statement and implement this function");
+    return this.#scores;
   }
 
   get latest() {
-    throw new Error("Remove this statement and implement this function");
+    return this.#scores.at(-1);
   }
 
   get personalBest() {
-    throw new Error("Remove this statement and implement this function");
+    return [...this.#scores].sort((a, b) => b - a)[0];
   }
 
   get personalTopThree() {
-    throw new Error("Remove this statement and implement this function");
+    return [...this.#scores].sort((a, b) => b - a).slice(0, 3);
   }
 }
