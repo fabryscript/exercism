@@ -3,6 +3,10 @@
 // convenience to get you started writing code faster.
 //
 
-export const parse = () => {
-  throw new Error("Remove this statement and implement this function");
-};
+export const parse = (phrase) =>
+  phrase
+    .replaceAll(/[-_,]/g, " ")
+    .split(" ")
+    .filter((w) => w.trim() !== "")
+    .reduce((prev, curr) => (prev += curr[0]), "")
+    .toUpperCase();
