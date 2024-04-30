@@ -4,28 +4,50 @@
 //
 
 export class BankAccount {
-  constructor() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  #balance: number = 0;
+  #isOpen = false;
 
   open() {
-    throw new Error("Remove this statement and implement this function");
+    if (this.#isOpen) throw new ValueError();
+
+    this.#isOpen = true;
   }
 
   close() {
-    throw new Error("Remove this statement and implement this function");
+    if (!this.#isOpen) throw new ValueError();
+
+    this.#isOpen = false;
+    this.#balance = 0;
   }
 
-  deposit() {
-    throw new Error("Remove this statement and implement this function");
+  deposit(amount: number) {
+    if (!this.#isOpen) throw new ValueError();
+
+    if (amount < 0) {
+      throw new ValueError();
+    }
+
+    this.#balance += amount;
   }
 
-  withdraw() {
-    throw new Error("Remove this statement and implement this function");
+  withdraw(amount: number) {
+    if (!this.#isOpen) throw new ValueError();
+
+    if (amount < 0 || amount > this.#balance) {
+      throw new ValueError();
+    }
+
+    this.#balance -= amount;
   }
 
   get balance() {
-    throw new Error("Remove this statement and implement this function");
+    if (!this.#isOpen) throw new ValueError();
+
+    return this.#balance;
+  }
+
+  set balance(_) {
+    throw new Error("Cannot set balance directly");
   }
 }
 
