@@ -3,6 +3,17 @@
 // convenience to get you started writing code faster.
 //
 
-export const transform = () => {
-  throw new Error("Remove this statement and implement this function");
+export const transform = (old) => {
+  const newScores = {};
+
+  const oldScores = Object.keys(old);
+  const oldLetters = Object.values(old);
+
+  oldLetters.forEach((letters, i) => {
+    letters.forEach((letter) => {
+      newScores[letter.toLowerCase()] = +oldScores[i];
+    });
+  });
+
+  return newScores;
 };
