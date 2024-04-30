@@ -4,16 +4,10 @@
 //
 
 export const transform = (old: Record<number, string[]>) => {
-  const newScores: Record<string, number> = {};
-
-  const oldScores = Object.keys(old);
-  const oldLetters = Object.values(old);
-
-  oldLetters.forEach((letters, i) => {
+  return Object.entries(old).reduce((newScores, [score, letters]) => {
     letters.forEach((letter) => {
-      newScores[letter.toLowerCase()] = +oldScores[i];
+      newScores[letter.toLowerCase()] = +score;
     });
-  });
-
-  return newScores;
+    return newScores;
+  }, {} as Record<string, number>);
 };
