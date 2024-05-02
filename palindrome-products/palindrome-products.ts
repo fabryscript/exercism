@@ -1,15 +1,23 @@
 export class Palindromes {
-  static generate({ minFactor, maxFactor }) {
+  static generate({
+    minFactor,
+    maxFactor,
+  }: {
+    minFactor: number;
+    maxFactor: number;
+  }): {
+    smallest: { value: number | null; factors: number[][] };
+    largest: { value: number | null; factors: number[][] };
+  } {
     if (minFactor > maxFactor) {
       throw new Error("min must be <= max");
     }
 
-    let smallest = {
+    let smallest: { value: number | null; factors: number[][] } = {
       value: null,
       factors: [],
     };
-
-    let largest = {
+    let largest: { value: number | null; factors: number[][] } = {
       value: null,
       factors: [],
     };
@@ -36,7 +44,7 @@ export class Palindromes {
   }
 }
 
-function isPalindrome(num) {
+function isPalindrome(num: number): boolean {
   const strNum = num.toString();
   return strNum === strNum.split("").reverse().join("");
 }
