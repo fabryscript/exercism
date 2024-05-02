@@ -3,20 +3,28 @@
 // convenience to get you started writing code faster.
 //
 
+const series = (n) =>
+  Array(n)
+    .fill(null)
+    .map((_, i) => i + 1);
+
 export class Squares {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  #n = 0;
+
+  constructor(n) {
+    this.#n = n;
   }
 
   get sumOfSquares() {
-    throw new Error('Remove this statement and implement this function');
+    return series(this.#n).reduce((total, curr) => total + curr ** 2, 0);
   }
 
   get squareOfSum() {
-    throw new Error('Remove this statement and implement this function');
+    const res = series(this.#n).reduce((total, curr) => total + curr, 0);
+    return res ** 2;
   }
 
   get difference() {
-    throw new Error('Remove this statement and implement this function');
+    return this.squareOfSum - this.sumOfSquares;
   }
 }
