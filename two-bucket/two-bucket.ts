@@ -1,12 +1,16 @@
 class Bucket {
-  constructor(name, size, content) {
+  name: string;
+  size: number;
+  content: number;
+
+  constructor(name: string, size: number, content: number) {
     this.name = name;
     this.size = size;
     this.content = content;
   }
 }
 
-const gcd = (x, y) => {
+const gcd = (x: number, y: number) => {
   while (y) {
     const t = y;
     y = x % y;
@@ -17,13 +21,18 @@ const gcd = (x, y) => {
 };
 
 export class TwoBucket {
-  #bucketOneSize;
-  #bucketTwoSize;
-  #goal;
-  #startBucket;
+  #bucketOneSize: number;
+  #bucketTwoSize: number;
+  #goal: number;
+  #startBucket: string;
 
-  constructor(bucketOneSize, bucketTwoSize, goal, startBucket) {
-    this.checkInputValidity(bucketOneSize, bucketTwoSize, goal);
+  constructor(
+    bucketOneSize: number,
+    bucketTwoSize: number,
+    goal: number,
+    startBucket: string
+  ) {
+    this.#checkInputValidity(bucketOneSize, bucketTwoSize, goal);
 
     this.#bucketOneSize = bucketOneSize;
     this.#bucketTwoSize = bucketTwoSize;
@@ -31,7 +40,11 @@ export class TwoBucket {
     this.#startBucket = startBucket;
   }
 
-  checkInputValidity(bucketOneSize, bucketTwoSize, goal) {
+  #checkInputValidity(
+    bucketOneSize: number,
+    bucketTwoSize: number,
+    goal: number
+  ) {
     if (goal % gcd(bucketOneSize, bucketTwoSize))
       throw new Error(
         `Goal ${goal} must divide evenly by the GCD of ${bucketOneSize} and ${bucketTwoSize}!`
@@ -45,11 +58,13 @@ export class TwoBucket {
   solve() {
     let bucketA = new Bucket("one", this.#bucketOneSize, 0);
     let bucketB = new Bucket("two", this.#bucketTwoSize, 0);
+
     if (this.#startBucket === "two") {
       [bucketA, bucketB] = [bucketB, bucketA];
     }
 
     let moves = 0;
+
     while (true) {
       if (bucketA.content === this.#goal || bucketB.content === this.#goal) {
         if (bucketB.content === this.#goal) {
