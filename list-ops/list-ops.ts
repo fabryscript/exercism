@@ -4,39 +4,43 @@
 //
 
 export class List {
-  constructor() {
-    throw new Error("Remove this statement and implement this function");
+  #values: unknown[] = [];
+
+  constructor(startingArr: unknown[]) {
+    this.#values = startingArr;
   }
 
-  append() {
-    throw new Error("Remove this statement and implement this function");
+  get values() {
+    return this.#values;
   }
 
-  concat() {
-    throw new Error("Remove this statement and implement this function");
+  append(list: List) {
+    const values = list.values;
+
+    for (let i = 0; i < values.length; i++) {
+      const incomingElement = values[i];
+      this.#values = [...this.#values, incomingElement];
+    }
+
+    return new List(this.values);
   }
 
-  filter() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  concat() {}
 
-  map() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  filter() {}
 
-  length() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  map() {}
 
-  foldl() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  length() {}
 
-  foldr() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  foldl() {}
 
-  reverse() {
-    throw new Error("Remove this statement and implement this function");
-  }
+  foldr() {}
+
+  reverse() {}
 }
+
+const list1 = new List([1, 2, 3, 4]);
+const list2 = new List([4, 5, 6]);
+
+console.log(list1.append(list2).values);
