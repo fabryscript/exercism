@@ -1,13 +1,22 @@
-//
-// This is only a SKELETON file for the 'List Ops' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
+// Did someone say "no Array.prototype"? Challenge accepted!
 
 export class List {
-  #values: unknown[] = [];
+  #values: number[] = [];
+  #length = 0;
 
-  constructor(startingArr: unknown[]) {
-    this.#values = startingArr;
+  constructor(starting?: (number | List)[]) {
+    if (!starting) return;
+
+    for (let element of starting) {
+      if (element instanceof List) {
+        this.#values = [...this.values, ...element.values];
+        this.#length++;
+        continue;
+      }
+
+      this.#values = [...this.values, element];
+      this.#length++;
+    }
   }
 
   get values() {
@@ -17,30 +26,85 @@ export class List {
   append(list: List) {
     const values = list.values;
 
-    for (let i = 0; i < values.length; i++) {
-      const incomingElement = values[i];
-      this.#values = [...this.#values, incomingElement];
+    for (let element of values) {
+      this.#values = [...this.values, element];
+      this.#length++;
     }
 
     return new List(this.values);
   }
 
-  concat() {}
+  concat(list: List): List {
+    const incomingValues = list.values;
 
-  filter() {}
+    for (let value of incomingValues) {
+      if (typeof value !== "object") {
+        this.#values = [...this.values, value];
+        this.#length++;
+        continue;
+      }
 
-  map() {}
+      this.append(new List(value));
+      this.#length++;
+    }
 
-  length() {}
+    return new List(this.#values);
+  }
 
-  foldl() {}
+  filter(cb: (el: number) => boolean) {
+    let result: number[] = [];
 
-  foldr() {}
+    for (let element of this.values) {
+      if (cb(element)) result = [...result, element];
+    }
 
-  reverse() {}
+    return new List(result);
+  }
+
+  map(cb: (el: number) => number) {
+    let result: number[] = [];
+
+    for (let element of this.values) {
+      const callbackResult = cb(element);
+      result = [...result, callbackResult];
+    }
+
+    return new List(result);
+  }
+
+  length() {
+    return this.#length;
+  }
+
+  foldl(cb: (acc: number, el: number) => number, initalValue = 0) {
+    let accumulated = initalValue;
+
+    for (let element of this.values) {
+      accumulated = cb(accumulated, element);
+    }
+
+    return accumulated;
+  }
+
+  foldr(cb: (acc: number, el: number) => number, initalValue = 0) {
+    let accumulated = initalValue;
+
+    for (let i = this.length(); i > 0; i--) {
+      const element = this.values[i - 1];
+      accumulated = cb(accumulated, element);
+    }
+
+    return accumulated;
+  }
+
+  reverse() {
+    let result: number[] = [];
+
+    for (let i = this.length(); i > 0; i--) {
+      const element = this.values[i - 1];
+      result = [...result, element];
+    }
+
+    return new List(result);
+  }
 }
-
-const list1 = new List([1, 2, 3, 4]);
-const list2 = new List([4, 5, 6]);
-
-console.log(list1.append(list2).values);

@@ -1,42 +1,110 @@
-//
-// This is only a SKELETON file for the 'List Ops' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
+// Did someone say "no Array.prototype"? Challenge accepted!
 
 export class List {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  #values = [];
+  #length = 0;
+
+  constructor(starting) {
+    if (!starting) return;
+
+    for (let element of starting) {
+      if (element instanceof List) {
+        this.#values = [...this.values, ...element.values];
+        this.#length++;
+        continue;
+      }
+
+      this.#values = [...this.values, element];
+      this.#length++;
+    }
   }
 
-  append() {
-    throw new Error('Remove this statement and implement this function');
+  get values() {
+    return this.#values;
   }
 
-  concat() {
-    throw new Error('Remove this statement and implement this function');
+  append(list) {
+    const values = list.values;
+
+    for (let element of values) {
+      this.#values = [...this.values, element];
+      this.#length++;
+    }
+
+    return new List(this.values);
   }
 
-  filter() {
-    throw new Error('Remove this statement and implement this function');
+  concat(list) {
+    const incomingValues = list.values;
+
+    for (let value of incomingValues) {
+      if (typeof value !== "object") {
+        this.#values = [...this.values, value];
+        this.#length++;
+        continue;
+      }
+
+      this.append(new List(value));
+      this.#length++;
+    }
+
+    return new List(this.#values);
   }
 
-  map() {
-    throw new Error('Remove this statement and implement this function');
+  filter(cb) {
+    let result = [];
+
+    for (let element of this.values) {
+      if (cb(element)) result = [...result, element];
+    }
+
+    return new List(result);
+  }
+
+  map(cb) {
+    let result = [];
+
+    for (let element of this.values) {
+      const callbackResult = cb(element);
+      result = [...result, callbackResult];
+    }
+
+    return new List(result);
   }
 
   length() {
-    throw new Error('Remove this statement and implement this function');
+    return this.#length;
   }
 
-  foldl() {
-    throw new Error('Remove this statement and implement this function');
+  foldl(cb, initialValue = 0) {
+    let accumulated = initialValue;
+
+    for (let element of this.values) {
+      accumulated = cb(accumulated, element);
+    }
+
+    return accumulated;
   }
 
-  foldr() {
-    throw new Error('Remove this statement and implement this function');
+  foldr(cb, initialValue = 0) {
+    let accumulated = initialValue;
+
+    for (let i = this.length(); i > 0; i--) {
+      const element = this.values[i - 1];
+      accumulated = cb(accumulated, element);
+    }
+
+    return accumulated;
   }
 
   reverse() {
-    throw new Error('Remove this statement and implement this function');
+    let result = [];
+
+    for (let i = this.length(); i > 0; i--) {
+      const element = this.values[i - 1];
+      result = [...result, element];
+    }
+
+    return new List(result);
   }
 }
