@@ -1,22 +1,40 @@
-//
-// This is only a SKELETON file for the 'Simple Cipher' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
 export class Cipher {
-  constructor() {
-    throw new Error('Remove this statement and implement this function');
+  #key;
+
+  constructor(key = "aaaaaaaaaa") {
+    this.#key = [...key].map((c) => ALPHABET.indexOf(c));
   }
 
-  encode() {
-    throw new Error('Remove this statement and implement this function');
+  transform(msg, operation) {
+    return [...msg]
+      .map((c, i) => {
+        const keyIndex = this.#key[i % this.#key.length];
+        const alphabetIndex = ALPHABET.indexOf(c);
+
+        let newIndex;
+
+        if (operation === "encode") {
+          newIndex = (alphabetIndex + keyIndex) % 26;
+        } else {
+          newIndex = (alphabetIndex - keyIndex + 26) % 26;
+        }
+
+        return ALPHABET[newIndex];
+      })
+      .join("");
   }
 
-  decode() {
-    throw new Error('Remove this statement and implement this function');
+  encode(msg) {
+    return this.transform(msg, "encode");
+  }
+
+  decode(code) {
+    return this.transform(code, "decode");
   }
 
   get key() {
-    throw new Error('Remove this statement and implement this function');
+    return this.#key.reduce((total, curr) => total + ALPHABET[curr], "");
   }
 }

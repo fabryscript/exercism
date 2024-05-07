@@ -1,66 +1,40 @@
-//
-// This is only a SKELETON file for the 'Simple Cipher' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-
-const alphabet = [..."abcdefghijklmnopqrstuvwxyz"];
-const DEFAULT_KEY = "aaaaaaaaaa";
-
-const sub = (input: string, key = DEFAULT_KEY) => {
-  console.log("SUB:");
-
-  const substituted = key
-    .split("")
-    .map((keyChar, i) => {
-      const keyCharCode = keyChar.charCodeAt(0);
-      const diff = input.charCodeAt(i) - keyCharCode;
-
-      console.log(diff);
-
-      return String.fromCharCode(keyCharCode + diff);
-    })
-    .join("");
-
-  return substituted;
-};
-
-// https://www.ascii-code.com/
-const getRandomLowerCaseAlphabetChar = () =>
-  String.fromCharCode(Math.floor(Math.random() * (122 - 97 + 1)) + 97);
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
 export class Cipher {
-  #key: string = DEFAULT_KEY;
+  #key: number[];
 
-  constructor(key?: string) {
-    if (!key) {
-      this.#key = this._generateRandomKey();
-      return;
-    }
-
-    this.#key = key;
+  constructor(key = "aaaaaaaaaa") {
+    this.#key = [...key].map((c) => ALPHABET.indexOf(c));
   }
 
-  _generateRandomKey() {
-    const arr: string[] = [];
+  transform(msg: string, operation: "encode" | "decode") {
+    return [...msg]
+      .map((c, i) => {
+        const keyIndex = this.#key[i % this.#key.length];
+        const alphabetIndex = ALPHABET.indexOf(c);
 
-    for (let i = 0; i < 101; i++) {
-      arr.push(getRandomLowerCaseAlphabetChar());
-    }
+        let newIndex: number;
 
-    return arr.join("");
+        if (operation === "encode") {
+          newIndex = (alphabetIndex + keyIndex) % 26;
+        } else {
+          newIndex = (alphabetIndex - keyIndex + 26) % 26;
+        }
+
+        return ALPHABET[newIndex];
+      })
+      .join("");
   }
 
-  encode(input: string) {
-    return sub(input, this.#key);
+  encode(msg: string) {
+    return this.transform(msg, "encode");
   }
 
-  decode(input: string) {}
+  decode(code: string) {
+    return this.transform(code, "decode");
+  }
 
   get key() {
-    return this.#key;
+    return this.#key.reduce((total, curr) => total + ALPHABET[curr], "");
   }
 }
-
-const cipher = new Cipher();
-
-console.log(cipher.encode("abcdefghij"));
