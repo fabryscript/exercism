@@ -13,7 +13,7 @@ export const square = (n) => {
   if (n === 0 || n < 0 || n > 64)
     throw new Error("square must be between 1 and 64");
 
-  return BigInt(2 ** n / 2);
+  return BigInt(2 ** (n - 1));
 };
 
 export const total = () =>
