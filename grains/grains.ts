@@ -16,8 +16,4 @@ export const square = (n: number) => {
   return BigInt(2 ** (n - 1));
 };
 
-export const total = (): bigint =>
-  Array.from({ length: 64 }, (_, i) => i + 1).reduce(
-    (prev, curr) => prev + square(curr),
-    0n
-  );
+export const total = (): bigint => 2n ** 64n - 1n;
