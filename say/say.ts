@@ -1,9 +1,5 @@
-//
-// This is only a SKELETON file for the 'Say' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-
 const NUMBERS = {
+  0: "zero",
   1: "one",
   2: "two",
   3: "three",
@@ -13,10 +9,16 @@ const NUMBERS = {
   7: "seven",
   8: "eight",
   9: "nine",
-};
-
-const MULTIPLES_OF_TEN = {
   10: "ten",
+  11: "eleven",
+  12: "twelve",
+  13: "thirteen",
+  14: "fourteen",
+  15: "fifteen",
+  16: "sixteen",
+  17: "seventeen",
+  18: "eighteen",
+  19: "nineteen",
   20: "twenty",
   30: "thirty",
   40: "forty",
@@ -27,56 +29,75 @@ const MULTIPLES_OF_TEN = {
   90: "ninety",
 };
 
-const breakNumber = (n: number) =>
-  n
-    .toString()
-    .split("")
-    .reduceRight((acc, curr) => {
-      if (acc.replaceAll("|.|", "").length % 3 === 0) {
-        return curr + "|.|" + acc;
-      }
+const breakNumber = (n: number): string[] => {
+  const chunks: string[] = [];
+  let numStr = n.toString();
 
-      return curr + acc;
-    });
+  while (numStr.length > 0) {
+    chunks.unshift(numStr.slice(-3));
+    numStr = numStr.slice(0, -3);
+  }
 
-const literalTriple = (n: string) => {
-  const r = n.split("").reduce((acc, curr) => {
-    return acc + curr; // wip
-  });
-
-  return r;
+  return chunks;
 };
 
-const replaceDots = (arr: string[]) => {
-  const result: string[] = [];
+const literalTriple = (n: string) => {
+  let number = +n;
+  if (number === 0) return "";
 
-  for (let i = arr.length - 1; i >= 0; i--) {
-    switch (true) {
-      case arr.length - 1 - i === 1:
-        result.push("thousand");
-        break;
-      case arr.length - 1 - i === 3:
-        result.push("million");
-        break;
-      case arr.length - 1 - i === 5:
-        result.push("billion");
-        break;
-      default:
-        result.push(literalTriple(arr[i]));
-        break;
+  let result = "";
+  const hundred = ~~(number / 100);
+  const rest = number % 100;
+  const ten = ~~(rest / 10);
+  const unit = rest % 10;
+
+  if (hundred > 0) {
+    result += `${NUMBERS[hundred]} hundred `;
+  }
+
+  if (rest > 0) {
+    if (rest < 20) {
+      result += NUMBERS[rest];
+    } else {
+      result += NUMBERS[ten * 10];
+      if (unit > 0) {
+        result += `-${NUMBERS[unit]}`;
+      }
     }
   }
 
-  return result.reverse();
+  return result.trim();
 };
 
-export const say = (n: number) => {
-  if (n < 0) throw new Error("Number must be between 0 and 999,999,999,999.");
-  if (n > 999_999_999_999)
+const replaceDots = (chunks: string[]) => {
+  const result: string[] = [];
+
+  const scales = ["", "thousand", "million", "billion"];
+
+  for (let i = 0; i < chunks.length; i++) {
+    const word = literalTriple(chunks[i]);
+    if (word !== "") {
+      result.push(
+        word +
+          (scales[chunks.length - 1 - i]
+            ? " " + scales[chunks.length - 1 - i]
+            : "")
+      );
+    }
+  }
+
+  return result;
+};
+
+export const say = (n: number): string => {
+  if (n < 0 || n > 999_999_999_999) {
     throw new Error("Number must be between 0 and 999,999,999,999.");
+  }
 
-  const split = breakNumber(n).split("|");
-  console.log(replaceDots(split));
+  if (n === 0) return NUMBERS[0];
+
+  const chunks = breakNumber(n);
+  const words = replaceDots(chunks);
+
+  return words.join(" ").trim();
 };
-
-say(1_123_456_789);
